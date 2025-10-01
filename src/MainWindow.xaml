@@ -9,7 +9,15 @@
     </Grid.RowDefinitions>
 
     <StackPanel Orientation="Horizontal" Margin="5">
-      <TextBox Width="200" Margin="2" x:Name="txtSearch" TextChanged="txtSearch_TextChanged" PlaceholderText="Search topics..." />
+      <Grid Width="200" Margin="2">
+        <TextBox x:Name="txtSearch" TextChanged="txtSearch_TextChanged" />
+        <TextBlock Text="Search topics..." 
+                   Foreground="Gray" 
+                   IsHitTestVisible="False" 
+                   Margin="5,0,0,0"
+                   VerticalAlignment="Center"
+                   Visibility="{Binding Text, ElementName=txtSearch, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
+      </Grid>
       <Button Name="BtnSubscribe" Content="Subscribe" Click="BtnSubscribe_Click" Margin="2"/>
       <Button Name="BtnUnsubscribe" Content="Unsubscribe" Click="BtnUnsubscribe_Click" Margin="2"/>
     </StackPanel>
