@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
@@ -76,6 +77,37 @@ namespace GenesysTopicSubscriberPOC
         {
             // Replace with real token logic or mock
             return Task.FromResult("mock-access-token");
+        }
+
+        private void txtSearch_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            var searchText = txtSearch.Text?.ToLower() ?? "";
+            if (GroupedTopics != null)
+            {
+                GroupedTopics.Filter = item =>
+                {
+                    if (item is Topic topic)
+                    {
+                        return string.IsNullOrEmpty(searchText) ||
+                               topic.Name.ToLower().Contains(searchText) ||
+                               topic.Description?.ToLower().Contains(searchText) == true;
+                    }
+                    return false;
+                };
+            }
+        }
+    }
+
+    public class StringNullOrEmptyToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.IsNullOrEmpty(value as string) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 
