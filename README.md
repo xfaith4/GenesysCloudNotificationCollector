@@ -20,10 +20,13 @@ The Genesys Cloud Notification Collector is a proof-of-concept application that 
 
 ## Prerequisites
 
-- Windows OS
-- .NET 8.0 SDK or later
-- A Genesys Cloud account with appropriate permissions
-- A registered OAuth client in Genesys Cloud
+- **Windows OS**: Required for WPF desktop application
+- **.NET 8.0 SDK or later**: Download from [dotnet.microsoft.com](https://dotnet.microsoft.com/download)
+- **Genesys Cloud Account**: Active account with appropriate permissions
+- **OAuth Client Configuration**: A registered OAuth client in Genesys Cloud with:
+  - Grant type: Authorization Code (PKCE)
+  - Redirect URI configured (e.g., `http://localhost:8080`)
+  - Required scopes for accessing notification topics and WebSocket APIs
 
 ## Setup
 
@@ -137,6 +140,9 @@ GenesysCloudNotificationCollector/
 │   ├── GenesysTopicSubscriberPOC.csproj
 │   ├── settings.json.example      # Configuration template
 │   └── sample_export.jsonl        # Sample notification data
+├── tests/
+│   ├── GenesysCloudNotificationCollector.Tests.csproj  # Test project
+│   └── ValidationTests.cs         # Comprehensive validation tests
 ├── .gitignore
 └── README.md
 ```
@@ -158,20 +164,76 @@ dotnet build src/GenesysTopicSubscriberPOC.csproj --configuration Release
 
 The project includes a GitHub Actions workflow (`.github/workflows/pr-validation.yml`) that automatically:
 - Validates pull requests to the main branch
-- Restores dependencies
+- Restores dependencies for both the main project and test project
 - Builds the project in Release configuration
-- Runs tests (if test projects are present)
+- Runs comprehensive validation tests including:
+  - Build validation tests (dependency resolution, .NET version)
+  - Authentication utility tests (Base64URL encoding, SHA256 hashing)
+  - Configuration tests (settings serialization, app data paths)
+  - Prerequisites validation tests (OS detection, SDK version, required packages)
+  - API endpoint format tests (URL construction for different regions)
+  - Integration tests (assembly loading, class accessibility)
+- Uploads test results as artifacts
 
 The workflow is triggered on:
 - Pull request opened
 - Pull request synchronized (new commits)
 - Pull request reopened
 
+#### Running Tests Locally
+
+To run the test suite locally:
+
+```bash
+# Restore test dependencies
+dotnet restore tests/GenesysCloudNotificationCollector.Tests.csproj
+
+# Run all tests
+dotnet test tests/GenesysCloudNotificationCollector.Tests.csproj --verbosity normal
+
+# Run tests with detailed output
+dotnet test tests/GenesysCloudNotificationCollector.Tests.csproj --verbosity detailed
+```
+
 ## Dependencies
 
 - **.NET 8.0**: Target framework
 - **Newtonsoft.Json**: JSON serialization and parsing
 - **System.Net.WebSockets**: WebSocket client implementation
+
+## Testing
+
+The project includes a comprehensive test suite that validates:
+
+### Build Validation Tests
+- Dependency resolution (Newtonsoft.Json package availability)
+- .NET runtime version compliance (.NET 8.0+)
+
+### Authentication Utility Tests
+- Base64URL encoding format validation
+- SHA256 hash generation capability
+
+### Configuration Tests
+- Application data path construction
+- Settings JSON serialization/deserialization
+
+### Prerequisites Validation Tests
+- Operating system detection (Windows requirement for WPF)
+- .NET SDK version requirement (.NET 8.0 SDK or later)
+- Required namespace availability (HTTP, JSON, WebSockets)
+- Dependency package validation
+
+### API Endpoint Tests
+- API endpoint URL format for different Genesys Cloud regions
+- WebSocket URL construction
+- OAuth redirect URI format validation
+
+### Integration Tests
+- Main assembly loading
+- GenesysAuth class accessibility
+- Public API method availability
+
+All tests are automatically run by the CI/CD pipeline on every pull request. See the [CI/CD](#cicd) section for more details.
 
 ## Troubleshooting
 
