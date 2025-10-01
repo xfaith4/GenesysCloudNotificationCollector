@@ -23,16 +23,35 @@ jobs:
         dotnet-version: '8.0.x'
     
     - name: Restore dependencies
-      run: dotnet restore src/GenesysTopicSubscriberPOC.csproj
+      run: |
+        dotnet restore src/GenesysTopicSubscriberPOC.csproj
+        if (Test-Path "tests/*.csproj") {
+          dotnet restore tests/GenesysCloudNotificationCollector.Tests.csproj
+        }
+      shell: pwsh
     
     - name: Build
-      run: dotnet build src/GenesysTopicSubscriberPOC.csproj --configuration Release --no-restore
+      run: |
+        dotnet build src/GenesysTopicSubscriberPOC.csproj --configuration Release --no-restore
+        if (Test-Path "tests/*.csproj") {
+          dotnet build tests/GenesysCloudNotificationCollector.Tests.csproj --configuration Release --no-restore
+        }
+      shell: pwsh
     
     - name: Run tests
       run: |
         if (Test-Path "tests/*.csproj") {
-          dotnet test --configuration Release --no-build --verbosity normal
+          dotnet test tests/GenesysCloudNotificationCollector.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+          Write-Host "Tests completed successfully"
         } else {
           Write-Host "No test projects found - skipping tests"
         }
       shell: pwsh
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: tests/TestResults/test-results.trx
+        if-no-files-found: ignore
