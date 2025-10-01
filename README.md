@@ -21,7 +21,7 @@ The Genesys Cloud Notification Collector is a proof-of-concept application that 
 ## Prerequisites
 
 - Windows OS
-- .NET 6.0 SDK or later
+- .NET 8.0 SDK or later
 - A Genesys Cloud account with appropriate permissions
 - A registered OAuth client in Genesys Cloud
 
@@ -72,7 +72,7 @@ dotnet run --project src/GenesysTopicSubscriberPOC.csproj
 
 Or run the compiled executable from:
 ```
-src\bin\Release\net6.0-windows\GenesysTopicSubscriberPOC.exe
+src\bin\Release\net8.0-windows\GenesysTopicSubscriberPOC.exe
 ```
 
 ## Usage
@@ -169,7 +169,7 @@ The workflow is triggered on:
 
 ## Dependencies
 
-- **.NET 6.0**: Target framework
+- **.NET 8.0**: Target framework
 - **Newtonsoft.Json**: JSON serialization and parsing
 - **System.Net.WebSockets**: WebSocket client implementation
 
@@ -186,7 +186,7 @@ The workflow is triggered on:
 - Ensure WebSocket connections are not blocked
 
 ### Build Issues
-- Confirm .NET 6.0 SDK is installed: `dotnet --version`
+- Confirm .NET 8.0 SDK is installed: `dotnet --version`
 - Clear NuGet cache: `dotnet nuget locals all --clear`
 - Restore packages: `dotnet restore`
 
