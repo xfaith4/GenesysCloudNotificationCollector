@@ -1,0 +1,56 @@
+<Window x:Class="GenesysTopicSubscriberPOC.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Genesys Topic Subscriber" Height="600" Width="1000">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <StackPanel Orientation="Horizontal" Margin="5">
+      <TextBox Width="200" Margin="2" x:Name="txtSearch" TextChanged="txtSearch_TextChanged" PlaceholderText="Search topics..." />
+      <Button Name="BtnSubscribe" Content="Subscribe" Click="BtnSubscribe_Click" Margin="2"/>
+      <Button Name="BtnUnsubscribe" Content="Unsubscribe" Click="BtnUnsubscribe_Click" Margin="2"/>
+    </StackPanel>
+
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="3*"/>
+        <ColumnDefinition Width="7*"/>
+      </Grid.ColumnDefinitions>
+
+      <ListBox Name="listTopics" Grid.Column="0" Margin="5"
+               ItemsSource="{Binding GroupedTopics}"
+               SelectionMode="Extended">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}"/>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+        <ListBox.GroupStyle>
+          <GroupStyle>
+            <GroupStyle.HeaderTemplate>
+              <DataTemplate>
+                <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}" Margin="4,4,0,2"/>
+              </DataTemplate>
+            </GroupStyle.HeaderTemplate>
+          </GroupStyle>
+        </ListBox.GroupStyle>
+      </ListBox>
+
+      <TabControl Grid.Column="1" Margin="5">
+        <TabItem Header="Raw JSON">
+          <TextBox Name="txtNotifications" AcceptsReturn="True"
+                   VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                   IsReadOnly="True" TextWrapping="NoWrap"/>
+        </TabItem>
+        <TabItem Header="Formatted JSON (Read-Only)">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <TextBlock Name="txtFormatted" FontFamily="Consolas" TextWrapping="Wrap"/>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
+    </Grid>
+  </Grid>
+</Window>

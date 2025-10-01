@@ -1,0 +1,2 @@
+{"topic": "v2.users.activity", "received_at": "2025-09-30T21:45:00Z", "payload": {"event": "started"}}
+{"topic": "v2.analytics.conversations", "received_at": "2025-09-30T21:45:01Z", "payload": {"conversationId": "abc123"}}

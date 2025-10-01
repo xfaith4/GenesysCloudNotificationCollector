@@ -1,0 +1,5 @@
+{
+  "client_id": "your-client-id-here",
+  "redirect_uri": "http://localhost:54321/callback",
+  "region": "usw2"
+}
